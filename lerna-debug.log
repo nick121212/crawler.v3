@@ -6,46 +6,74 @@
 5 silly isInitialized true
 6 silly existsSync /srv/cralwer.v3/VERSION
 7 silly initialize attempt
-8 info current version 0.0.1
+8 info current version undefined
 9 silly getUpdates
 10 info Checking for updated packages...
 11 silly hasTags
-12 verbose hasTags false
-13 warn No tags found!
-14 info Comparing with initial commit.
-15 silly collectDependents
-16 silly collectUpdates
-17 info No updated packages to publish.
-18 silly initialize success
-19 silly execute attempt
-20 silly isDetachedHead
-21 silly getCurrentBranch
-22 error execute Error: fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
-22 error execute Use '--' to separate paths from revisions, like this:
-22 error execute 'git <command> [<revision>...] -- [<file>...]'
-22 error execute
-22 error execute     at Function.module.exports.sync (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
-22 error execute     at Function.execSync (/usr/local/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
-22 error execute     at Function.getCurrentBranch (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:183:59)
-22 error execute     at Function.isDetachedHead (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:37:37)
-22 error execute     at PublishCommand.execute (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:235:55)
-22 error execute     at PublishCommand._attempt (/usr/local/lib/node_modules/lerna/lib/Command.js:265:21)
-22 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:252:15
-22 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:274:13
-22 error execute     at PublishCommand.initialize (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:205:9)
-22 error execute     at PublishCommand._attempt (/usr/local/lib/node_modules/lerna/lib/Command.js:265:21)
-22 error execute  callback with error
-22 error execute  Error: fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
-22 error execute Use '--' to separate paths from revisions, like this:
-22 error execute 'git <command> [<revision>...] -- [<file>...]'
-22 error execute
-22 error execute     at Function.module.exports.sync (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
-22 error execute     at Function.execSync (/usr/local/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
-22 error execute     at Function.getCurrentBranch (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:183:59)
-22 error execute     at Function.isDetachedHead (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:37:37)
-22 error execute     at PublishCommand.execute (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:235:55)
-22 error execute     at PublishCommand._attempt (/usr/local/lib/node_modules/lerna/lib/Command.js:265:21)
-22 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:252:15
-22 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:274:13
-22 error execute     at PublishCommand.initialize (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:205:9)
-22 error execute     at PublishCommand._attempt (/usr/local/lib/node_modules/lerna/lib/Command.js:265:21)
+12 verbose hasTags true
+13 silly getLastTag
+14 verbose getLastTag vnull
+15 info Comparing with tag vnull
+16 silly getLastTaggedCommitInBranch
+17 silly getLastTag
+18 verbose getLastTag vnull
+19 verbose getLastTaggedCommitInBranch a1d8698d5fb85481c764acc787cb20c6900adda9
+20 silly describeTag a1d8698d5fb85481c764acc787cb20c6900adda9
+21 silly describeTag vnull
+22 silly diffSinceIn vnull /srv/cralwer.v3/packages/crawler.node
+23 silly diff
+24 silly diffSinceIn vnull /srv/cralwer.v3/packages/crawler.proxy
+25 silly diff
+26 silly collectDependents
+27 silly collectUpdates
+28 info No updated packages to publish.
+29 silly initialize success
+30 silly execute attempt
+31 silly isDetachedHead
+32 silly getCurrentBranch
+33 verbose getCurrentBranch master
+34 verbose isDetachedHead false
+35 silly addFile /srv/cralwer.v3/lerna.json
+36 silly commit vundefined
+37 verbose commit [ 'commit', '-m', 'vundefined' ]
+38 error execute Error: On branch master
+38 error execute Your branch is up-to-date with 'origin/master'.
+38 error execute Changes not staged for commit:
+38 error execute 	modified:   lerna-debug.log
+38 error execute
+38 error execute Untracked files:
+38 error execute 	packages/crawler.node/
+38 error execute
+38 error execute no changes added to commit
+38 error execute
+38 error execute     at Function.module.exports.sync (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
+38 error execute     at Function.execSync (/usr/local/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
+38 error execute     at Function.commit (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:84:39)
+38 error execute     at PublishCommand.gitCommitAndTagVersion (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:591:30)
+38 error execute     at PublishCommand.commitAndTagUpdates (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:562:27)
+38 error execute     at PublishCommand.execute (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:246:16)
+38 error execute     at PublishCommand._attempt (/usr/local/lib/node_modules/lerna/lib/Command.js:265:21)
+38 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:252:15
+38 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:274:13
+38 error execute     at PublishCommand.initialize (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:205:9)
+38 error execute  callback with error
+38 error execute  Error: On branch master
+38 error execute Your branch is up-to-date with 'origin/master'.
+38 error execute Changes not staged for commit:
+38 error execute 	modified:   lerna-debug.log
+38 error execute
+38 error execute Untracked files:
+38 error execute 	packages/crawler.node/
+38 error execute
+38 error execute no changes added to commit
+38 error execute
+38 error execute     at Function.module.exports.sync (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:277:26)
+38 error execute     at Function.execSync (/usr/local/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
+38 error execute     at Function.commit (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:84:39)
+38 error execute     at PublishCommand.gitCommitAndTagVersion (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:591:30)
+38 error execute     at PublishCommand.commitAndTagUpdates (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:562:27)
+38 error execute     at PublishCommand.execute (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:246:16)
+38 error execute     at PublishCommand._attempt (/usr/local/lib/node_modules/lerna/lib/Command.js:265:21)
+38 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:252:15
+38 error execute     at /usr/local/lib/node_modules/lerna/lib/Command.js:274:13
+38 error execute     at PublishCommand.initialize (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:205:9)

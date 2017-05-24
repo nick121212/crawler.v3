@@ -1,21 +1,25 @@
 {
-  "name": "cralwer.v3",
-  "version": "0.0.1",
-  "description": "爬虫程序",
-  "main": "index.js",
-  "scripts": {
-    "test": "npm test"
-  },
-  "keywords": [
-    "crawler",
-    "nodejs",
-    "typescript"
-  ],
-  "author": "NICK",
-  "license": "MIT",
-  "devDependencies": {
-    "babel-generator": "^6.24.1",
-    "lerna": "^2.0.0-rc.5",
-    "source-map": "^0.5.6"
-  }
+    "name": "cralwer.v3",
+    "version": "0.0.1",
+    "description": "爬虫程序",
+    "main": "index.js",
+    "scripts": {
+        "test": "npm test"
+    },
+    "keywords": [
+        "crawler",
+        "nodejs",
+        "typescript"
+    ],
+    "repository": {
+        "url": "https://github.com/nick121212/crawler.v3.git",
+        "type": "git"
+    },
+    "author": "NICK",
+    "license": "MIT",
+    "devDependencies": {
+        "babel-generator": "^6.24.1",
+        "lerna": "^2.0.0-rc.5",
+        "source-map": "^0.5.6"
+    }
 }

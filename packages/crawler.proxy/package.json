@@ -1,6 +1,6 @@
 {
   "name": "crawler.proxy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "爬虫代理节点",
   "main": "index.js",
   "scripts": {

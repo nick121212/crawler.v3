@@ -1,4 +1,4 @@
 node_modules
-packages/**/node_modules
+packages/**/node_modules/**
 .vscode
 lerna-debug.log

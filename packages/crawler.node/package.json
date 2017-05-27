@@ -1,24 +1,24 @@
 {
-    "name": "crawler.node",
-    "version": "0.0.1",
-    "description": "爬虫节点",
-    "main": "index.js",
-    "scripts": {
-        "test": "npm test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/nick121212/crawler.node.git"
-    },
-    "keywords": [
-        "typescript",
-        "nodejs",
-        "cralwer"
-    ],
-    "author": "NICK",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/nick121212/crawler.node/issues"
-    },
-    "homepage": "https://github.com/nick121212/crawler.node#readme"
+  "name": "crawler.node",
+  "version": "0.0.1",
+  "description": "爬虫节点",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick121212/crawler.node.git"
+  },
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "cralwer"
+  ],
+  "author": "NICK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nick121212/crawler.node/issues"
+  },
+  "homepage": "https://github.com/nick121212/crawler.node#readme"
 }

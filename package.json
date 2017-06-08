@@ -19,6 +19,8 @@
     "license": "MIT",
     "devDependencies": {
         "babel-generator": "^6.24.1",
+        "eslint": "^3.19.0",
+        "eslint-config-google": "^0.7.1",
         "lerna": "^2.0.0-rc.5",
         "source-map": "^0.5.6"
     }

@@ -1,1 +1,1 @@
-{"symbols":{},"files":{}}
+{"symbols":{"_Type":{"hasNamespace":false,"type":1,"moduleName":"index","relativePath":"packages/crawler.node/src/index"},"Foo":{"hasNamespace":false,"type":0,"moduleName":"index","relativePath":"packages/crawler.node/src/index"},"IFoo":{"hasNamespace":false,"type":1,"moduleName":"index","relativePath":"packages/crawler.node/src/index"},"Demo":{"hasNamespace":false,"type":0,"moduleName":"index","relativePath":"packages/crawler.node/src/index"}},"files":{"packages/crawler.node/src/index.ts":"2017-06-08T05:21:57.000Z"}}

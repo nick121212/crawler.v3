@@ -1,82 +1,93 @@
-import 'reflect-metadata';
+import { ServerLoader, ServerSettings, InjectorService } from 'ts-express-decorators';
+import { $log } from 'ts-log-debug';
+import * as Express from 'express';
+import * as Path from "path";
 
-function logType(target: any, key: string) {
-    var t = Reflect.getMetadata("design:type", target, key);
+import { IBaseInfoFactory, BaseInfoFactory } from './services/baseinfo';
+import GlobalErrorHandlerMiddleware from "./middlewares/_error";
+import { ConfigService } from './services/config';
 
+const rootDir = Path.resolve(__dirname);
+/**
+ * 服务的启动文件
+ */
+@ServerSettings({
+    rootDir: rootDir,
+    mount: {
+        '/api': `${rootDir}/controllers/current/**/*.js`
+    },
+    componentsScan: [
+        `${rootDir}/middlewares/**/**.js`
+    ]
+})
+export class Server extends ServerLoader {
+    /**
+     * 设置自定义中间件
+     * @returns {void | Promise<any>}
+     */
+    public $onMountingMiddlewares(): void | Promise<any> {
+        const morgan = require('morgan'),
+            cookieParser = require('cookie-parser'),
+            bodyParser = require('body-parser'),
+            compress = require('compression'),
+            methodOverride = require('method-override');
 
-    console.log(target);
-    console.log(`${key} type: ${t.name}`);
-}
+        this
+            .use(morgan('dev'))
+            // .use(ServerLoader.AcceptMime("application/json"))
+            .use(cookieParser())
+            .use(compress({}))
+            .use(methodOverride())
+            .use(bodyParser.json())
+            .use(bodyParser.urlencoded({
+                extended: true
+            }));
 
-function logParamTypes(target: any, key: string) {
-    var types = Reflect.getMetadata("design:paramtypes", target, key);
-    var s = types.map((a: any) => a.name).join();
-    console.log(`${key} param types: ${s}`);
-}
+        // return this;
+    }
 
-function logReturnType(target: any, key: string) {
-    var t = Reflect.getMetadata("design:returntype", target, key);
+    /**
+     * lifecircle onReady
+     */
+    public $onReady() {
+        console.log('Server started...');
+    }
+    /**
+     * lifecircle onServerInitError
+     * @param err 错误信息
+     */
+    public $onServerInitError(err: Error) {
+        console.error(err);
+    }
+    /**
+     * 路由加载完后hook的方法
+     */
+    $afterRoutesInit() {
+        this.use(GlobalErrorHandlerMiddleware);
+    }
+    /**
+     * 初始化服务
+     */
+    static Initialize(): Promise<any> {
+        let rtn = new Server().start();
+        let baseInfoFactory = InjectorService.get<BaseInfoFactory>(BaseInfoFactory);
+        let configFactory = InjectorService.get<ConfigService>(ConfigService);
 
-    console.log(`${key} type: ${t.name}`);
-}
+        // 设置基础信息数据
+        baseInfoFactory.currentTask = 0;
+        baseInfoFactory.maxTask = 10;
 
-function logDec(config: { path: string, method: string }) {
-    return (target: any, name: string, value: PropertyDescriptor) => {
-        let oldValue = value.value;
-
-        if (value && value.value) {
-            value.value = (...args: Array<any>) => {
-
-                console.log(`路由：${config.path}，路由方法：${config.method},参数：${JSON.stringify(args)}`);
-
-                return oldValue && oldValue.apply(target, args);
-            };
+        // 读取配置文件
+        if (process.argv.length < 2 && !process.argv[2]) {
+            $log.error("没有定义config文件!");
+            process.exit(1);
+        } else {
+            // 配置文件载入
+            configFactory.initConfig(process.argv[2]);
         }
 
-        return value;
+        return rtn;
     }
 }
 
-/** 
-  * Basic shape for a type.
-  */
-interface _Type {
-    /** 
-      * Describes the specific shape of the type.
-      * @remarks 
-      * One of: "typeparameter", "typereference", "interface", "tuple", "union", 
-      * or "function".
-      */
-    kind: string;
-}
-
-class Foo { }
-interface IFoo extends _Type { }
-
-class Demo {
-    public attr1: string;
-
-    @logDec({ path: "/a", method: "post" })
-    @logDec({ path: "/a/b", method: "post" })
-    doSomething(
-        param1: string,
-        param2: number,
-        param3: Foo,
-        param4: { test: string },
-        param5: IFoo,
-        param6: Function,
-        param7: (a: number) => void,
-    ): number {
-        return 1;
-    }
-
-    constructor() {
-
-    }
-}
-
-let demo = new Demo();
-
-let a = demo.doSomething("1", 2, new Foo(), { test: "3" }, { kind: "d" }, () => { }, (a: number) => { });
-
-console.log(a);
+Server.Initialize();

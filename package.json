@@ -23,5 +23,6 @@
         "eslint-config-google": "^0.7.1",
         "lerna": "^2.0.0-rc.5",
         "source-map": "^0.5.6"
-    }
+    },
+    "dependencies": {}
 }

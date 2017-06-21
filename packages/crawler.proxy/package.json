@@ -1,27 +1,27 @@
 {
-    "name": "crawler.proxy",
-    "version": "0.0.2",
-    "description": "爬虫代理节点",
-    "main": "index.js",
-    "scripts": {
-        "test": "npm test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/nick121212/crawler.proxy.git"
-    },
-    "keywords": [
-        "typescript",
-        "nodejs",
-        "cralwer"
-    ],
-    "engines": {
-        "node": "~6.0"
-    },
-    "author": "NICK",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/nick121212/crawler.proxy/issues"
-    },
-    "homepage": "https://github.com/nick121212/crawler.proxy#readme"
+  "name": "crawler.proxy",
+  "version": "0.0.3",
+  "description": "爬虫代理节点",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick121212/crawler.proxy.git"
+  },
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "cralwer"
+  ],
+  "engines": {
+    "node": "~6.0"
+  },
+  "author": "NICK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nick121212/crawler.proxy/issues"
+  },
+  "homepage": "https://github.com/nick121212/crawler.proxy#readme"
 }

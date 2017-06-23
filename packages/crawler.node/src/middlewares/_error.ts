@@ -9,7 +9,7 @@ import { ResultService } from '../services/result';
  * 全局错误中间件
  */
 @MiddlewareError()
-export default class GlobalErrorHandlerMiddleware implements IMiddlewareError {
+export class GlobalErrorHandlerMiddleware implements IMiddlewareError {
     constructor(private resultService: ResultService) {
 
     }
@@ -28,7 +28,7 @@ export default class GlobalErrorHandlerMiddleware implements IMiddlewareError {
         const toHTML = (message = "") => message.replace(/\n/gi, "<br />");
 
         if (error instanceof Exception) {
-            $log.error("" + error);
+            $log.error(error);
             response.status(error.status).send(this.resultService.getErrorData(error));
             return next();
         }
@@ -38,7 +38,7 @@ export default class GlobalErrorHandlerMiddleware implements IMiddlewareError {
             return next();
         }
 
-        $log.error("" + error);
+        $log.error(error);
         response.status(error.status || 500).send("Internal Error");
 
         return next();

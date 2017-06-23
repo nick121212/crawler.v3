@@ -50,7 +50,15 @@ export class Configurator extends EventEmitter {
 export class ConfigService implements IConfigService {
     private configurator: Configurator;
 
-    constructor() { }
+    constructor() {
+        if (process.argv.length < 2 && !process.argv[2]) {
+            $log.error("没有定义config文件!");
+            process.exit(1);
+        } else {
+            // 配置文件载入
+            this.initConfig(process.argv[2]);
+        }
+    }
 
     /**
      * 初始化配置文件
@@ -65,16 +73,41 @@ export class ConfigService implements IConfigService {
         this.configurator.updateConfig(filePath);
     }
 
+    /**
+     * 返回配置信息
+     */
     public get config() {
+        if (!this.configurator) {
+            return null;
+        }
         return this.configurator.config;
     }
 }
 
+/**
+ * config的信息
+ */
+export interface IConfig {
+    redis: {
+        options: redis.RedisOptions;
+        nodes: Array<{ host: string, port: number }>,
+        redisOptions: redis.ClusterOptions
+    },
+    mongo: {
+        address: string;
+        options: any;
+    },
+    taskInfo: {
+        maxTask: number;
+    }
+}
+
+/**
+ * 配置信息接口
+ */
 export interface IConfigService {
     initConfig: (filePath: string, automaticConfigReload: boolean) => void | any;
-    config: {
-        redis: redis.RedisOptions
-    };
+    config: IConfig;
 }
 
 // 工厂方法注册

@@ -1,6 +1,9 @@
 import { Service, InjectorService } from "ts-express-decorators";
 import { Exception } from 'ts-httpexceptions';
 
+/**
+ * 返回固定格式的json数据
+ */
 export interface IResultData {
     code: number;
     message: string;

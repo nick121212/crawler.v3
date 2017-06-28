@@ -2,10 +2,10 @@
 
 # 公共部分安装
 
-1. 安装mongodb
+1. 安装mongodb（2.4+）
 2. 安装redis
-3. 安装elasticsearch
-4. 安装nodejs
+3. 安装elasticsearch（2.4.3+）
+4. 安装nodejs（6.0+）
 5. 安装nginx
 6. 创建mongodb用户
 ```
@@ -19,6 +19,14 @@ db.createUser({user:"crawler",pwd:"crawler",roles:[{role:"readWrite",db:"crawler
 ## crawler.node
 1. 爬虫代理节点，提供ip代理服务。
 
+大致流程说明：
+1. 第一步：关闭nginx
+2. 第二步：关闭pptp通道
+3. 第三步：创建通道
+4. 第四步：添加默认网关并且验证通道创建的地址是否在网关里面
+5. 第五步：延时3s，重启nginx
+
+安装：
 * 安装nginx，配置正向代理配置文件,端口统一为8083。
 ```
     server{  

@@ -84,6 +84,7 @@ export class BaseInfoFactory implements IBaseInfoFactory {
             pid: process.pid,
             currentTask: this._currentTask,
             maxTask: this._maxTask,
+            leftTask: this._maskTask - this._currentTask,
             callIp: callIp,
             callPort: http.port,
             ip: ip.address(),

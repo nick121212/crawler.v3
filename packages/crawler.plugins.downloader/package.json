@@ -2,7 +2,7 @@
   "name": "crawler.plugins.downloader",
   "version": "1.0.0",
   "description": "爬虫下载插件",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,9 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "modelproxy": "^0.5.18",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
     "superagent": "^3.1.0",
     "superagent-bluebird-promise": "^4.1.0",
     "superagent-charset": "^1.1.1",
@@ -20,6 +23,8 @@
     "superagent-retry": "^0.6.0"
   },
   "devDependencies": {
-    "@types/superagent": "^3.5.0"
+    "@types/request-promise": "^4.1.35",
+    "@types/superagent": "^3.5.0",
+    "@types/tv4": "^1.2.28"
   }
 }

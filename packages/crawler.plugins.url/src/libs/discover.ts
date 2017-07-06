@@ -1,5 +1,7 @@
+import { IQueueItem } from './queueitem';
 import * as uri from "urijs";
 import * as _ from "lodash";
+import * as pathToRegexp from 'path-to-regexp';
 
 // 正则，用来匹配页面中的地址
 const discoverRegex = [
@@ -69,7 +71,7 @@ export class DiscoverLinks {
     private parseScriptTags: boolean = false;
     private allowedProtocols: Array<RegExp> = [];
     private blackPathList: Array<any> = [];
-    private whitePathList: Array<any> = [];
+    private whitePathList: Array<{ path: string, enable: boolean }> = [];
 
     private userAgent: string = "";
     private _robotsTxts: Array<any> = [];
@@ -101,7 +103,7 @@ export class DiscoverLinks {
         // 弃用这个属性
         this.blackPathList = blackPathList || [];
         this.whitePathList = whitePathList || [];
-        this.whitePathList.push(/^\/$/i);
+        // this.whitePathList.push(/^\/$/i);
         this.userAgent = userAgent || "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36";
         this._robotsTxts = [];
         this.fetchWhitelistedMimeTypesBelowMaxDepth = fetchWhitelistedMimeTypesBelowMaxDepth || false;
@@ -126,6 +128,7 @@ export class DiscoverLinks {
         } catch (e) {
             return false;
         }
+
         return this.allowedProtocols.reduce((prev, protocolCheck) => {
             return prev || !!protocolCheck.exec(protocol);
         }, true);
@@ -144,31 +147,21 @@ export class DiscoverLinks {
 
     /**
      * 路径是否支持
-     * @param path {string} 链接地址路径
+     * @param urlPath {string} 链接地址路径
      * @returns boolean
      */
-    pathSupported(path: string): boolean {
-        let result;
-        let check = (list) => {
-            let filters = _.filter(list, (value) => {
-                if (value.constructor === RegExp) {
-                    return (value as RegExp).test(path);
-                } else if (value.constructor === Function) {
-                    return (value as Function)(path);
-                } else if (value.constructor === String) {
-                    return value === path;
-                }
-                return false;
-            });
+    pathSupported(urlPath: string): boolean {
+        let res = true;
 
-            return filters.length > 0;
-        };
-        // 判断不在在黑名单里面么
-        // result = !check(this.blackPathList || []);
-        // 是否在白名单里面
-        (result = check(this.whitePathList || []));
+        this.whitePathList.forEach(({ path, enable }) => {
+            let pathToReg = pathToRegexp(path, []);
 
-        return result;
+            res = pathToReg.test(urlPath);
+
+            if (!res) return false;
+        });
+
+        return res;
     }
 
     /**
@@ -177,11 +170,7 @@ export class DiscoverLinks {
      * @param queueItem {object}
      * @returns {Array}
      */
-    cleanExpandResources(urlMatch: Array<string> = [], queueItem: any = {}): any {
-        if (!urlMatch) {
-            return [];
-        }
-
+    cleanExpandResources(urlMatch: any = [], queueItem: any = {}): any {
         return urlMatch
             .map(this.cleanURL.bind(this, queueItem))
             .reduce((list: Array<string>, URL: string | uri.URI) => {
@@ -234,7 +223,7 @@ export class DiscoverLinks {
      * @param URL       {String}
      * @returns {*|string}
      */
-    cleanURL(queueItem, URL): string {
+    cleanURL(queueItem: IQueueItem, URL): string {
         return URL
             .replace(/^(?:\s*href|\s*src)\s*=+\s*/i, "")
             .replace(/^\s*/, "")
@@ -323,24 +312,24 @@ export class DiscoverLinks {
             queueItem.protocol = "http";
         }
 
-        let resourceText = queueItem.responseBody || "";
+        let { responseBody = "" } = queueItem;
 
         if (!this.parseHTMLComments) {
-            resourceText = resourceText.replace(/<!--([\s\S]+?)-->/g, "");
+            responseBody = responseBody.replace(/<!--([\s\S]+?)-->/g, "");
         }
 
         if (!this.parseScriptTags) {
-            resourceText = resourceText.replace(/<script(.*?)>([\s\S]*?)<\/script>/gi, "");
+            responseBody = responseBody.replace(/<script(.*?)>([\s\S]*?)<\/script>/gi, "");
         }
 
         return discoverRegex
             .reduce((list, regex) => {
                 let resources = typeof regex === "function" ?
-                    regex(resourceText) :
-                    resourceText.match(regex);
+                    regex(responseBody) :
+                    responseBody.match(regex) || [];
 
                 return list.concat(
-                    this.cleanExpandResources(resources, queueItem));
+                    this.cleanExpandResources(resources || [], queueItem));
             }, [])
             .reduce((list, check) => {
                 if (list.indexOf(check) < 0) {

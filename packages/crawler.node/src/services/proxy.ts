@@ -23,6 +23,11 @@ const commands = {
 
 /**
  * 更换代理服务
+ * 第一步：关闭nginx
+ * 第二步：关闭pptp通道
+ * 第三步：创建通道
+ * 第四步：添加默认网关并且验证通道创建的地址是否在网关里面
+ * 第五步：延时3s，重启nginx
  */
 @Service()
 export class ProxyService {

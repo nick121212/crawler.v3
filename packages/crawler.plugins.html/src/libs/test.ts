@@ -2289,11 +2289,11 @@ const config = {
 	}
 };
 
-let discover = urlPlugin(config)({
-	queueItem: {
-		responseBody: responseBody,
-		url: "http://www.yaolan.com"
-	}
-}, () => { }).then((data) => {
+// let discover = urlPlugin(config)({
+// 	queueItem: {
+// 		responseBody: responseBody,
+// 		url: "http://www.yaolan.com"
+// 	}
+// }, () => { }).then((data) => {
 
-}).catch((err) => { console.log(err) });
+// }).catch((err) => { console.log(err) });

@@ -136,7 +136,7 @@ export class Queue {
             path: newURL.path(),
             uriPath: newURL.path(),
             query: newURL.query(),
-            depth: context.depth + 1,
+            depth: (context.depth||0) + 1,
             url: newURL.toString(),
             _id: ""
         };
@@ -148,15 +148,13 @@ export class Queue {
      * @param queueItem  {Object}
      * @returns {*}
      */
-    queueURL(url: string | IQueueItem, queueItem): boolean | IQueueItem {
+    queueURL(url: string | IQueueItem, queueItem: IQueueItem): boolean | IQueueItem {
         let parsedURL: any = typeof url === "object" ? url : this.processURL(url, queueItem);
 
         if (!parsedURL) return false;
-
         // 赋值一个ID
-        if (queueItem && !queueItem.id) {
-            queueItem._id = md5(queueItem.url);
-        }
+        queueItem._id = md5(queueItem.url);
+
         let fetchDenied = this._fetchConditions.reduce((prev, callback) => {
             return prev || !callback(parsedURL, queueItem);
         }, false);
@@ -185,7 +183,7 @@ export class Queue {
      * @param host    {String}
      * @returns {boolean|*}
      */
-    domainValid(host) {
+    domainValid(host: string) {
         let domainInWhitelist = (host) => {
             // If there's no whitelist, or the whitelist is of zero length,
             // just return false.

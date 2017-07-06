@@ -76,7 +76,7 @@ export class BaseInfoFactory implements IBaseInfoFactory {
      * currentTask
      * maxTask
      */
-    public getInfo() {
+    public getInfo(): any {
         let { http = { port: 0 }, ip: callIp } = this.configFactory.config.baseInfo;
 
         return {
@@ -84,7 +84,7 @@ export class BaseInfoFactory implements IBaseInfoFactory {
             pid: process.pid,
             currentTask: this._currentTask,
             maxTask: this._maxTask,
-            leftTask: this._maskTask - this._currentTask,
+            leftTask: this._maxTask - this._currentTask,
             callIp: callIp,
             callPort: http.port,
             ip: ip.address(),

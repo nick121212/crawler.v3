@@ -2274,13 +2274,13 @@ const config = {
 		"initialPort": 80,
 		"stripQuerystring": true,
 		"fetchConditions": [],
-		"domainWhiteList": [/(.*?)yaolan.com/],
+		"domainWhiteList": ["(.*?).yaolan.com"],
 		"filterByDomain": true
 	},
 	"discoverConfig": {
 		"parseHTMLComments": false,
 		"parseScriptTags": false,
-		"allowedProtocols": [/http/, /https/],
+		"allowedProtocols": ["http", "https"],
 		"whitePathList": [{ "path": "/(.*?)", "enable": true }],
 		"userAgent": "",
 		"fetchWhitelistedMimeTypesBelowMaxDepth": false,

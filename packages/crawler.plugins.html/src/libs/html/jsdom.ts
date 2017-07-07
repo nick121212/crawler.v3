@@ -1,24 +1,23 @@
-let jsdom = require("jsdom");
-let _ = require("lodash");
-let fs = require("fs");
-
 import * as _ from 'lodash';
 import * as jsdom from 'jsdom';
+
 import * as _fs from 'fs';
 
-const jquery = fs.readFileSync(`${__dirname}/../../../../node_modules/jquery/dist/jquery.min.js`, "utf-8");
+const jquery = _fs.readFileSync(`${__dirname}/../../../node_modules/jquery/dist/jquery.min.js`, "utf-8");
 
 export class JsDomDealStrategy {
     /**
-     * @param queueItem {Object} 数据
+     * 获取dom元素
+     * @param queueItem 抓取数据详情
+     * @param $ 
      */
-    load(queueItem, $): Promise<any> {
+    load(queueItem: any, $: any): Promise<any> {
         return new Promise((resolve, reject) => {
             !$ && jsdom.env({
                 html: queueItem.responseBody.replace(/iframe/g, "iframe1"),
                 parsingMode: "html",
                 src: [jquery],
-                done: function (err, window) {
+                done: function(err, window) {
                     if (err) {
                         return reject(err);
                     }
@@ -30,15 +29,14 @@ export class JsDomDealStrategy {
             }
         });
     }
-
     /**
-     * @param queueItem {Object} 数据
-     * @param data      {Object} 单个数据配置
-     * @param $         {Cheerio} Dom节点
-     * @param index     {number}  数组中，节点的索引
-     * @return promise
+     * 处理一个字段
+     * @param queueItem 爬取的数据
+     * @param data      单个数据配置
+     * @param $         dom节点
+     * @param index     数组中，节点的索引
      */
-    doDeal(queueItem, data, $, index) {
+    doDeal(queueItem, data, $?, index?): Promise<any> {
         let $sel, result, len = 0;
         let $noSelcSel;
 
@@ -47,7 +45,7 @@ export class JsDomDealStrategy {
             $ = await this.load(queueItem, $);
 
             // 如果存在index，则获取索引节点
-            if (typeof index === "number" && $.size() > index) {
+            if (typeof index === "number" && $.length > index) {
                 $sel = $.eq(index);
             }
             try {
@@ -76,6 +74,11 @@ export class JsDomDealStrategy {
         });
     }
 
+    /**
+     * 删除选择器的元素
+     * @param $sel       当前dom元素
+     * @param selector   选择器
+     */
     doRemoveEle($sel, selector) {
         if (!_.isArray(selector)) {
             selector = [selector];
@@ -91,8 +94,8 @@ export class JsDomDealStrategy {
 
     /**
      * 取得元素节点
-     * @param $ {Object} cheerio对象
-     * @param selector {Array|String} 搜索字段
+     * @param $        dom元素
+     * @param selector 选择器
      * @return cheerio对象
      */
     doFindSelector($, selector) {
@@ -128,8 +131,8 @@ export class JsDomDealStrategy {
 
     /**
      * 调用方法
-     * @param $   {Object} cheerio对象
-     * @param methodInfo {Object} 调用的方法名称
+     * @param $           dom元素
+     * @param methodInfo  调用的方法名称
      * @returns {*}
      */
     doCallMethod($, methodInfo) {

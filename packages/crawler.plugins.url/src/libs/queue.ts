@@ -2,6 +2,8 @@ import * as uri from "urijs";
 import * as _ from "lodash";
 import * as qs from "qs";
 import * as md5 from "blueimp-md5";
+import * as pathToRegexp from 'path-to-regexp';
+
 import { IQueueItem } from './queueitem';
 
 const QUEUE_ITEM_INITIAL_DEPTH = 1;
@@ -136,7 +138,7 @@ export class Queue {
             path: newURL.path(),
             uriPath: newURL.path(),
             query: newURL.query(),
-            depth: (context.depth||0) + 1,
+            depth: (context.depth || 0) + 1,
             url: newURL.toString(),
             _id: ""
         };
@@ -185,34 +187,36 @@ export class Queue {
      */
     domainValid(host: string) {
         let domainInWhitelist = (host) => {
-            // If there's no whitelist, or the whitelist is of zero length,
-            // just return false.
+            // 没有没有设置域名白名单，或则数据为空
+            // 直接返回false
             if (!this.domainWhiteList || !this.domainWhiteList.length) {
                 return false;
             }
-            // Otherwise, scan through it.
+            // 遍历域名白名单
             return !!this.domainWhiteList.reduce((prev, cur) => {
-                // If we already located the relevant domain in the whitelist...
+                // 如果已经找到，则直接返回
                 if (prev) {
                     return prev;
                 }
-                // If the domain is just equal, return true.
+
                 if (host === cur) {
                     return true;
                 }
 
                 // 正则匹配
-                if (cur.constructor === Object && cur.regexp) {
-                    return new RegExp(cur.regexp, cur.scope || "i").test(host);
-                }
+                let pathToReg = pathToRegexp(cur, []);
+                let res = pathToReg.test(host);
 
-                // If we're ignoring WWW subdomains, and both domains,
-                // less www. are the same, return true.
+                if (res) {
+                    return true;
+                }
+                
+                // 忽略域名的匹配，则直接返回true
                 if (this.ignoreWWWDomain && host === cur.replace(/^www\./i, "")) {
                     return true;
                 }
 
-                // Otherwise, sorry. No dice.
+                // 不匹配，返回false
                 return false;
             }, false);
         };

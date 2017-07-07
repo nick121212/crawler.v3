@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import { DiscoverLinks } from './discover';
-import { Queue } from './queue';
+import { DiscoverLinks } from './libs/discover';
+import { Queue } from './libs/queue';
 
 /**
  * 分析得出的url处理分析出需要的
@@ -17,10 +17,12 @@ export const urlPlugin = ({ discoverConfig = {}, queueConfig = {} }) => {
         let urls: Array<string> = await discoverLink.discoverResources(ctx.queueItem);
         let allowUrls: Array<any> = [];
 
+        // url地址queue化
         urls.forEach((url: string) => {
             allowUrls.push(queue.queueURL(url, ctx.queueItem || {}));
         });
 
+        // 过滤可用的url
         ctx.urls = allowUrls.filter((url) => {
             return url !== false;
         });

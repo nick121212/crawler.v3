@@ -69,7 +69,7 @@ export class DiscoverLinks {
 
     private parseHTMLComments: boolean = false;
     private parseScriptTags: boolean = false;
-    private allowedProtocols: Array<RegExp> = [];
+    private allowedProtocols: Array<string> = [];
     private blackPathList: Array<any> = [];
     private whitePathList: Array<{ path: string, enable: boolean }> = [];
 
@@ -99,7 +99,7 @@ export class DiscoverLinks {
 
         this.parseHTMLComments = parseHTMLComments || false;
         this.parseScriptTags = parseScriptTags || false;
-        this.allowedProtocols = allowedProtocols || [/http/ig];
+        this.allowedProtocols = allowedProtocols || ["http"];
         // 弃用这个属性
         this.blackPathList = blackPathList || [];
         this.whitePathList = whitePathList || [];
@@ -130,7 +130,7 @@ export class DiscoverLinks {
         }
 
         return this.allowedProtocols.reduce((prev, protocolCheck) => {
-            return prev || !!protocolCheck.exec(protocol);
+            return prev || protocolCheck.toLocaleLowerCase() == protocol.toLocaleLowerCase();
         }, true);
     }
 

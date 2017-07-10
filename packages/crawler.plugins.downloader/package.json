@@ -1,12 +1,19 @@
 {
   "name": "crawler.plugins.downloader",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "description": "爬虫下载插件",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick121212/crawler.plugins.downloader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nick121212/crawler.plugins.downloader/issues"
+  },
+  "homepage": "https://github.com/nick121212/crawler.plugins.downloader#readme",
   "author": "NICK",
   "license": "MIT",
   "dependencies": {

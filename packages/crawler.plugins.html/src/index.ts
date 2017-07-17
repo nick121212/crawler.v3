@@ -41,7 +41,7 @@ const getRules = (pages: Array<any> = [], queueItem: any = {}) => {
  * 分析得出的url处理分析出需要的
  * @param config
  */
-export const htmlPlugin = (config: { pages: Array<any> }) => {
+export default (config: { pages: Array<any> }) => {
     /**
      * 返回中间件方法
      */
@@ -56,12 +56,35 @@ export const htmlPlugin = (config: { pages: Array<any> }) => {
         if (rules.length) {
             for (let rule of rules) {
                 results.push((await analysis.doDeal(ctx.queueItem, rule)).result);
-                // console.log((await analysis.doDeal(ctx.queueItem, rule)).result);
             }
         }
-        console.log(results);
         ctx.results = results;
 
         await next();
     };
+};
+
+module.exports = function () {
+    const seneca: any = this;
+
+    seneca.add({ role: 'crawler.plugins', cmd: 'html' }, async ({ queueItem, pages = [] }, done) => {
+        let rules = getRules(pages, queueItem);
+        let urls = [];
+        let results: Array<any> = [];
+
+        // 解析规则，分析页面中的字段
+        if (rules.length && queueItem.responseBody) {
+            for (let rule of rules) {
+                try {
+                    results.push((await analysis.doDeal(queueItem, rule)));
+                } catch (e) {
+                    return done(e);
+                }
+            }
+        }
+
+        done(null, results);
+    });
+
+    return 'crawler.plugins.html';
 };

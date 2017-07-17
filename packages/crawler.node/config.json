@@ -1,7 +1,8 @@
 {
     "redis": {
         "options": {
-            "host": "106.75.78.203",
+            "uri": "redis://47.92.126.120:6379",
+            "host": "47.92.126.120",
             "port": 6379
         },
         "nodes": [{
@@ -41,6 +42,24 @@
             "ip": "0.0.0.0",
             "port": 9002
         },
-        "ip": "127.0.0.1"
+        "ip": "127.0.0.1",
+        "schedule": {
+            "ip": "0.0.0.0",
+            "port": 9004
+        },
+        "socket": {
+            "url": "http://localhost:9003",
+            "options": {
+                "path": "/crawler",
+                "extraHeaders": {
+                    "X-Custom-Type": "crawler.node"
+                }
+            }
+        }
+    },
+    "elasticsearch": {
+        "host": "47.92.126.120:9200",
+        "log": "trace",
+        "sniffInterval": 30000
     }
 }

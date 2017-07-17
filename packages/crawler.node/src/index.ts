@@ -2,13 +2,22 @@ import { ServerLoader, ServerSettings, InjectorService, IServerLifecycle, Global
 import { $log } from 'ts-log-debug';
 import * as Express from 'express';
 import * as Path from "path";
+import * as kue from 'kue';
+import * as  kueUiExpress from 'kue-ui-express';
+import * as events from 'events';
+import * as socketIoClient from 'socket.io-client';
 
 import { GlobalErrorHandlerMiddleware } from "./middlewares/_error";
-import { AgendaService } from './services/agenda';
+import { KueService } from './services/kue';
 import { BaseInfoFactory, IBaseInfoFactory } from './services/baseinfo';
 import { ConfigService } from "./services/config";
+import { SocketService } from './services/socket';
+import PassportLocalService from "./services/passport.local";
 
 const rootDir = Path.resolve(__dirname);
+
+events.EventEmitter.defaultMaxListeners = 0;
+
 /**
  * 服务的启动文件
  */
@@ -36,22 +45,27 @@ export class Server extends ServerLoader implements IServerLifecycle {
         // this.scan(`${rootDir}/services/**/**.js`);
         // this.scan(`${rootDir}/constrollers/**/**.js`);
         // this.scan(`${rootDir}/middlewares/**/**.js`);
-        this.mount('/api', `${rootDir}/controllers/**/**.js`);
+        this.mount("/api", `${rootDir}/controllers/**/**.js`);
     }
 
     /**
      * 设置自定义中间件
      * @returns {void | Promise<any>}
      */
-    public $onMountingMiddlewares(): void | Promise<any> {
+    @Inject()
+    public $onMountingMiddlewares(passportService: PassportLocalService): void | Promise<any> {
         const morgan = require('morgan'),
             cookieParser = require('cookie-parser'),
             bodyParser = require('body-parser'),
             compress = require('compression'),
             methodOverride = require('method-override'),
-            multer = require('multer');
+            multer = require('multer'),
+            session = require('express-session'),
+            passport = require('passport'),
+            status = require('express-status-monitor');
 
         this
+            .use(status({}))
             .use(morgan('dev'))
             .use(GlobalAcceptMimesMiddleware)
             .use(cookieParser())
@@ -61,13 +75,29 @@ export class Server extends ServerLoader implements IServerLifecycle {
             .use(bodyParser.urlencoded({
                 extended: true
             }))
-            .use(multer().single());
+            .use(multer().single())
+            .use(session({
+                secret: 'mysecretkey',
+                resave: true,
+                saveUninitialized: true,
+                maxAge: 36000,
+                cookie: {
+                    path: '/',
+                    httpOnly: true,
+                    secure: false,
+                    maxAge: null
+                }
+            }))
+            // Configure passport JS
+            .use(passportService.middlewareInitialize())
+            .use(passportService.middlewareSession());;
         // return this;
     }
     /**
      * lifecircle onReady
      */
-    public $onReady() {
+    @Inject()
+    public $onReady(): void {
         $log.info('Server started...');
     }
 
@@ -86,11 +116,17 @@ export class Server extends ServerLoader implements IServerLifecycle {
      * 手动启动http服务
      */
     @Inject()
-    $afterRoutesInit( @Inject(AgendaService) agendaFactory: AgendaService, @Inject(ConfigService) config: ConfigService) {
+    $afterRoutesInit(
+        @Inject(KueService) kueService: KueService,
+        @Inject(ConfigService) config: ConfigService
+        ) {
         let { http = { port: 0 } } = config.config.baseInfo;
 
+        // 添加kue的界面路由
+        kueUiExpress(this.expressApp, '/kue/', '/api');
+        this.expressApp.use('/api', kue.app);
         // 添加定时任务中间件
-        this.use("/agendash", agendaFactory.initAgendash());
+        // this.use("/agendash", agendaFactory.initAgendash());
         // 启用全局错误中间件
         this.use(GlobalErrorHandlerMiddleware);
         // 手动启动httpserver

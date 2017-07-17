@@ -3,6 +3,10 @@
   "version": "0.0.5",
   "description": "",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typings": [
+    "dist/index.d.ts"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +29,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.66",
+    "@types/node": "^8.0.10",
     "@types/urijs": "^1.15.33"
   }
 }

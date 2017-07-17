@@ -151,15 +151,17 @@ export class DiscoverLinks {
      * @returns boolean
      */
     pathSupported(urlPath: string): boolean {
-        let res = true;
+        let res = false;
 
-        this.whitePathList.forEach(({ path, enable }) => {
+        _.forEach(this.whitePathList, ({ path, enable }) => {
             let pathToReg = pathToRegexp(path, []);
 
             res = pathToReg.test(urlPath);
 
-            if (!res) return false;
-        });
+            if (res) {
+                return false;
+            }
+        })
 
         return res;
     }

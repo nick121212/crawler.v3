@@ -3,6 +3,7 @@ import * as ip from 'ip';
 
 import { IRedisService } from './redis';
 import { ConfigService } from './config';
+import { KueService } from "./kue";
 
 /**
  * 基础信息的工厂服务
@@ -19,12 +20,7 @@ export interface IBaseInfoFactory {
         pid: number;
         currentTask: number;
         maxTask: number;
-    };
-    /**
-     * 获取代理节点的基础信息
-     */
-    getProxyInfo: () => {
-
+        ip: string;
     };
     /**
      * 最大的任务数量
@@ -34,7 +30,12 @@ export interface IBaseInfoFactory {
      * 当前的任务数量
      */
     currentTask: number;
+    /**
+     * 获取当前任务数量是否当前最大任务数
+     */
+    isLock: boolean;
 }
+
 
 /**
  * 基础信息服务
@@ -48,12 +49,15 @@ export class BaseInfoFactory implements IBaseInfoFactory {
      * 设置基础信息
      * 读取配置文件中maxTask字段
      */
-    constructor( @Inject(ConfigService) private configFactory: ConfigService) {
+    constructor( @Inject(ConfigService) private configFactory: ConfigService, @Inject(KueService) private kueService: KueService) {
         if (!configFactory || !configFactory.config) {
             return;
         }
 
         this.maxTask = configFactory.config.taskInfo.maxTask || 10;
+        // let job = this.kueService.queue.create(`set.baseinfo.ip${this.getInfo().ip}`, {
+
+        // });
     }
 
     /**
@@ -64,10 +68,28 @@ export class BaseInfoFactory implements IBaseInfoFactory {
     }
 
     /**
+     * 返回最大任务数
+     */
+    public get maxTask() {
+        return this._maxTask;
+    }
+
+    /**
      * 设置当前的任务数量
      */
     public set currentTask(val: number) {
         this._currentTask = val;
+    }
+
+    public get currentTask(): number {
+        return this._currentTask;
+    }
+
+    /**
+     * 获取当前任务数量是否当前最大任务数
+     */
+    public get isLock() {
+        return this.maxTask <= this.currentTask;
     }
 
     /**
@@ -91,14 +113,7 @@ export class BaseInfoFactory implements IBaseInfoFactory {
             lastUpdateAt: Date.now()
         };
     }
-    /**
-     * 获取代理节点的基础信息
-     */
-    public getProxyInfo() {
-        return Object.assign({}, this.getInfo(), {
-            type: "crawler.proxy"
-        });
-    }
+
 }
 
 // 工厂方法注册

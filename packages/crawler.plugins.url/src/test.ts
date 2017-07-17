@@ -1,4 +1,4 @@
-import { urlPlugin } from './index';
+import urlPlugin from './index';
 
 const responseBody = `
 

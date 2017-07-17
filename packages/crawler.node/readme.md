@@ -1,6 +1,14 @@
+
 # 爬虫节点
 
 负责调度插件列表
+
+# 安装
+
+1. mongo
+> ```yum install mongodb```
+> 
+2. redis 2.6.12+
 
 # 接口
 

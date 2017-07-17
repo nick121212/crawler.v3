@@ -76,9 +76,9 @@ export class ConfigService implements IConfigService {
     /**
      * 返回配置信息
      */
-    public get config() {
+    public get config(): IConfig {
         if (!this.configurator) {
-            return null;
+            return {} as any;
         }
         return this.configurator.config;
     }
@@ -99,6 +99,26 @@ export interface IConfig {
     },
     taskInfo: {
         maxTask: number;
+    },
+    baseInfo: {
+        http: {
+            ip: string;
+            port: number;
+        };
+        schedule: {
+            ip: string;
+            port: number;
+        };
+        socket: {
+            url: string;
+            options: Object;
+        },
+        ip: string;
+    },
+    elasticsearch: {
+        host: string;
+        log?: string,
+        sniffInterval?: number;
     }
 }
 

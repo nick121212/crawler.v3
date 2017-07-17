@@ -1,8 +1,10 @@
 import * as Express from "express";
-import { Controller, Get, Inject, UseAfter, Post, BodyParams } from "ts-express-decorators";
+import { Controller, Get, Inject, UseAfter, Post, BodyParams, Use } from "ts-express-decorators";
+import * as Kue from 'kue';
 
 import { IBaseInfoFactory, BaseInfoFactory } from '../../../services/baseinfo';
 import { ResultMiddleware } from '../../../middlewares/result';
+import { PluginService } from "../../../services/plugin";
 
 /**
  * 节点基础信息Controller
@@ -13,7 +15,7 @@ export class NodeCtrl {
      * 构造函数
      * @param baseInfoFactory 基础信息工厂方法,用来返回节点的基础信息
      */
-    constructor( @Inject(BaseInfoFactory) private baseInfoFactory: IBaseInfoFactory) {
+    constructor( @Inject(BaseInfoFactory) private baseInfoFactory: IBaseInfoFactory, @Inject(PluginService) private pluginService: PluginService) {
 
     }
     /**
@@ -36,15 +38,16 @@ export class NodeCtrl {
     public setMaxTask( @BodyParams('maxTask') maxTask: number): any {
         this.baseInfoFactory.maxTask = maxTask;
     }
-    
+
     /**
      * 执行一次爬取操作
+     * @param queueItem 需要爬取的链接
+     * @param proxyInfo 代理信息
+     * @param plugins    插件配置信息
      */
     @Post("/execute")
     @UseAfter(ResultMiddleware)
-    public execute() {
-        this.baseInfoFactory.currentTask += 1;
-
-        return {};
+    public async execute( @BodyParams('queueItem') queueItem: any, @BodyParams('proxyInfo') proxyInfo: any, @BodyParams('plugins') plugins: any) {
+        return await this.pluginService.createJob(queueItem, proxyInfo, plugins);
     }
 }

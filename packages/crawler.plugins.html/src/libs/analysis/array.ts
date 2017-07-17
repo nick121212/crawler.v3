@@ -45,7 +45,7 @@ export class Strategy extends Base {
             res.result = results;
             for (let i = 0, n = res.len; i < n; i++) {
                 res.result.push({});
-                promises = promises.concat(this.doDealData(queueItem, data.data.concat([]), res.result, res.$cur, i));
+                promises = promises.concat(this.doDealData(queueItem, data.data ? data.data.concat([]) : [], res.result, res.$cur, i));
             }
             resource = res;
 

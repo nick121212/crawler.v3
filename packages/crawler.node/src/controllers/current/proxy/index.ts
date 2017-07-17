@@ -1,10 +1,11 @@
 import * as Express from "express";
-import { Controller, Get, Inject, UseAfter, Post, BodyParams, InjectorService } from "ts-express-decorators";
+import { Controller, Get, Inject, UseAfter, Post, BodyParams, InjectorService, Required } from "ts-express-decorators";
 
 import { IBaseInfoFactory, BaseInfoFactory } from '../../../services/baseinfo';
 import { ResultMiddleware } from '../../../middlewares/result';
 import { ProxyInfoFactory } from "../../../services/proxyinfo";
-import { AgendaService } from '../../../services/agenda';
+import { ProxyService } from "../../../services/proxy";
+// import { AgendaService } from '../../../services/agenda';
 
 /**
  * 节点基础信息Controller
@@ -17,7 +18,7 @@ export class NodeCtrl {
      */
     constructor(
         @Inject(ProxyInfoFactory) private baseInfoFactory: ProxyInfoFactory,
-        @Inject(AgendaService) private agendaService: AgendaService
+        private proxyService: ProxyService
     ) {
 
     }
@@ -37,7 +38,7 @@ export class NodeCtrl {
     @Post("/restart")
     @UseAfter(ResultMiddleware)
     public async execute( @BodyParams('ip') ip: string): Promise<any> {
-        return await this.agendaService.executeProxy(ip);
+        return this.baseInfoFactory.createJob(ip);
     }
 
     /**
@@ -46,12 +47,12 @@ export class NodeCtrl {
      * @param password 
      * @param server 
      */
-    @Post("/setProxyInfo")
     @UseAfter(ResultMiddleware)
+    @Post("/setProxyInfo")
     public async setProxyInfo(
-        @BodyParams('account') account: string,
-        @BodyParams('password') password: string,
-        @BodyParams('server') server: string
+        @Required() @BodyParams('account') account: string,
+        @Required() @BodyParams('password') password: string,
+        @Required() @BodyParams('server') server: string
         ): Promise<any> {
 
         this.baseInfoFactory.proxyInfo = {
@@ -60,6 +61,6 @@ export class NodeCtrl {
             server
         };
 
-        return await this.agendaService.executeProxy();
+        return this.baseInfoFactory.createJob("");
     }
 }

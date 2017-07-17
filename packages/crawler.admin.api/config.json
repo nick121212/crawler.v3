@@ -1,0 +1,32 @@
+{
+    "redis": {
+        "options": {
+            "uri": "redis://47.92.126.120:6379",
+            "host": "47.92.126.120",
+            "port": 6379
+        },
+        "redisOptions": {
+
+        }
+    },
+    "baseInfo": {
+        "http": {
+            "ip": "0.0.0.0",
+            "port": 9003
+        },
+        "socket": {
+            "path": "/crawler"
+        },
+        "ip": "127.0.0.1"
+    },
+    "elasticsearch": {
+        "host": "47.92.126.120:9200",
+        "log": ["error"],
+        "sniffInterval": 30000,
+        "requestTimeout": 5000
+    },
+    "rabbitmq": {
+        "url": "amqp://nick:111111@47.92.126.120/%2Fcrawler",
+        "options": {}
+    }
+}
